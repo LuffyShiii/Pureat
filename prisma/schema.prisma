@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Food {
+  id                     String    @id
+  canonical_name         String
+  category               String
+  subcategory            String?
+  state                  String    // raw | cooked | dried | processed
+  purine_min_mg_per_100g Float
+  purine_max_mg_per_100g Float
+  source                 String
+  source_url             String?
+  source_date            DateTime?
+  data_confidence        String    // high | medium | low
+  notes                  String?
+  created_at             DateTime  @default(now())
+  updated_at             DateTime  @updatedAt
+
+  aliases FoodAlias[]
+
+  @@index([category])
+  @@index([subcategory])
+  @@map("foods")
+}
+
+model FoodAlias {
+  id       String @id @default(cuid())
+  food_id  String
+  alias    String
+  language String @default("zh")
+  priority Int    @default(0)
+
+  food Food @relation(fields: [food_id], references: [id], onDelete: Cascade)
+
+  @@index([alias])
+  @@index([food_id])
+  @@map("food_aliases")
+}
+
+model RecommendationRule {
+  id             String   @id @default(cuid())
+  rule_type      String   // food_base | portion | daily_context | category
+  condition      Json
+  level          String   // green | yellow | red
+  recommendation String
+  priority       Int
+  source         String
+  source_date    DateTime?
+  version        Int      @default(1)
+  active         Boolean  @default(true)
+
+  @@index([rule_type])
+  @@index([active, priority])
+  @@map("recommendation_rules")
+}
+
+model RecognitionResult {
+  id               String   @id @default(cuid())
+  device_id        String
+  image_hash       String?
+  raw_ai_response  Json
+  recognized_items Json
+  confidence_level String
+  created_at       DateTime @default(now())
+
+  @@index([device_id, created_at])
+  @@map("recognition_results")
+}
+
+model DeviceUsage {
+  id                String @id @default(cuid())
+  device_id         String
+  date              String // YYYY-MM-DD
+  recognition_count Int    @default(0)
+
+  @@unique([device_id, date])
+  @@index([device_id, date])
+  @@map("device_usage")
+}

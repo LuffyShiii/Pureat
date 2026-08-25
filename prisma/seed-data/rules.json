@@ -1,0 +1,145 @@
+[
+  {
+    "rule_type": "category",
+    "condition": { "category": ["organ_meat"] },
+    "level": "red",
+    "recommendation": "动物内脏嘌呤通常很高，建议尽量避免。",
+    "priority": 100,
+    "source": "国家卫健委 2024《成人高尿酸血症与痛风食养指南》",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "category",
+    "condition": { "category": ["alcohol"] },
+    "level": "red",
+    "recommendation": "酒精会干扰尿酸代谢，高尿酸人群建议尽量避免饮酒。",
+    "priority": 95,
+    "source": "ACR 痛风管理指南 / 国家卫健委食养指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "food_base",
+    "condition": { "purine_max_mg_per_100g": { "gte": 200 } },
+    "level": "red",
+    "recommendation": "这个食物嘌呤含量很高，建议尽量避免。",
+    "priority": 90,
+    "source": "综合临床指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "food_base",
+    "condition": { "purine_max_mg_per_100g": { "gte": 150, "lt": 200 } },
+    "level": "yellow",
+    "recommendation": "这个食物嘌呤较高，建议限量食用。",
+    "priority": 80,
+    "source": "综合临床指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "food_base",
+    "condition": { "purine_max_mg_per_100g": { "gte": 100, "lt": 150 } },
+    "level": "yellow",
+    "recommendation": "这个食物嘌呤中等，可以吃但要控制份量。",
+    "priority": 70,
+    "source": "综合临床指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "food_base",
+    "condition": { "purine_max_mg_per_100g": { "lt": 100 } },
+    "level": "green",
+    "recommendation": "这个食物嘌呤较低，可以吃。",
+    "priority": 60,
+    "source": "综合临床指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "portion",
+    "condition": { "purine_max_mg": { "gte": 300 } },
+    "level": "red",
+    "recommendation": "本次摄入嘌呤较高，即使单独看也建议尽量少吃或不吃。",
+    "priority": 85,
+    "source": "综合临床指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "portion",
+    "condition": { "purine_max_mg": { "gte": 200, "lt": 300 } },
+    "level": "yellow",
+    "recommendation": "这次份量对应的嘌呤不少，建议减少本次份量。",
+    "priority": 75,
+    "source": "综合临床指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "daily_context",
+    "condition": { "daily_purine_max_mg": { "gte": 400 } },
+    "level": "yellow",
+    "recommendation": "你今天已经记录了较多嘌呤，建议本次适当控制份量。",
+    "priority": 65,
+    "source": "国家卫健委食养指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "category",
+    "condition": { "category": ["beverage"], "subcategory": ["sugary"] },
+    "level": "yellow",
+    "recommendation": "含糖饮料中的果糖可能影响尿酸水平，建议少喝。",
+    "priority": 55,
+    "source": "国家卫健委食养指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "category",
+    "condition": { "category": ["soy"] },
+    "level": "yellow",
+    "recommendation": "豆制品嘌呤中等，可以吃但注意份量。",
+    "priority": 50,
+    "source": "国家卫健委食养指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "category",
+    "condition": { "category": ["mushroom"] },
+    "level": "yellow",
+    "recommendation": "菌菇类嘌呤中等，可以吃但注意份量。",
+    "priority": 50,
+    "source": "国家卫健委食养指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  },
+  {
+    "rule_type": "category",
+    "condition": { "category": ["nut"] },
+    "level": "yellow",
+    "recommendation": "坚果嘌呤中等，可以吃一小把，不要过量。",
+    "priority": 50,
+    "source": "国家卫健委食养指南",
+    "source_date": "2024-01-01",
+    "version": 1,
+    "active": true
+  }
+]
