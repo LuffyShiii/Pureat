@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "postinstall": "prisma generate",
     "test:e2e": "playwright test",
     "deploy:check": "tsx scripts/deploy-check.ts",
     "db:seed": "tsx prisma/seed.ts",
