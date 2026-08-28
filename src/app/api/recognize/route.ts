@@ -6,7 +6,7 @@ import { normalizeFoodName } from "@/lib/food/normalizer";
 import type { RecognizedItem } from "@/types";
 import { Prisma } from "@/generated/prisma/client";
 
-const DAILY_RECOGNITION_LIMIT = 5;
+const DAILY_RECOGNITION_LIMIT = 20;
 
 function getToday(): string {
   return new Date().toISOString().split("T")[0];
