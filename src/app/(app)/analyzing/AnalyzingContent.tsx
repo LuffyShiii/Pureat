@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Camera } from "lucide-react";
-import { getDeviceId } from "@/lib/storage/indexeddb";
+import {
+  deletePendingPhoto,
+  getDeviceId,
+  getPendingPhoto,
+} from "@/lib/storage/indexeddb";
 
 const STEPS = [
   { label: "识别食物", progress: 25 },
@@ -14,89 +18,87 @@ const STEPS = [
 
 export default function AnalyzingPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const source = searchParams.get("source") || "camera";
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(0);
   const [error, setError] = useState("");
-  const [showTrigger, setShowTrigger] = useState(false);
 
   useEffect(() => {
-    if (source === "camera" || source === "gallery") {
-      // Auto-trigger works on desktop, but mobile Safari often blocks
-      // programmatic file input clicks. Show a manual fallback after a delay.
-      fileInputRef.current?.click();
-      const timer = setTimeout(() => setShowTrigger(true), 1200);
-      return () => clearTimeout(timer);
-    }
-  }, [source]);
+    let interval: ReturnType<typeof setInterval> | null = null;
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) {
-      // User cancelled or auto-trigger was blocked (common on mobile Safari).
-      // Stay on this page and let the manual trigger button take over.
-      return;
-    }
-
-    setShowTrigger(false);
-    setError("");
-    setStep(0);
-
-    const interval = setInterval(() => {
-      setStep((s) => Math.min(s + 1, STEPS.length - 1));
-    }, 800);
-
-    try {
-      const deviceId = getDeviceId();
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("device_id", deviceId);
-
-      const res = await fetch("/api/recognize", {
-        method: "POST",
-        body: formData,
-      });
-
-      clearInterval(interval);
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "识别失败");
+    async function analyze() {
+      const pending = await getPendingPhoto();
+      if (!pending) {
+        setError("没有找到待分析的照片，请返回首页重新选择。");
         return;
       }
 
-      if (data.error) {
-        setError(data.error);
-        return;
-      }
+      setError("");
+      setStep(0);
 
-      // Store result in sessionStorage for analysis page
-      sessionStorage.setItem("pureat_analysis_items", JSON.stringify(data.items));
-      sessionStorage.setItem("pureat_analysis_mock", data.mock ? "true" : "false");
-      if (data.thumbnail) {
-        sessionStorage.setItem("pureat_analysis_thumbnail", data.thumbnail);
+      interval = setInterval(() => {
+        setStep((s) => Math.min(s + 1, STEPS.length - 1));
+      }, 800);
+
+      try {
+        const deviceId = getDeviceId();
+        const formData = new FormData();
+        formData.append("image", pending.file);
+        formData.append("device_id", deviceId);
+
+        const res = await fetch("/api/recognize", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (interval) clearInterval(interval);
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.error || "识别失败");
+          return;
+        }
+
+        if (data.error) {
+          setError(data.error);
+          return;
+        }
+
+        // Store result in sessionStorage for analysis page
+        sessionStorage.setItem(
+          "pureat_analysis_items",
+          JSON.stringify(data.items)
+        );
+        sessionStorage.setItem(
+          "pureat_analysis_mock",
+          data.mock ? "true" : "false"
+        );
+        if (data.thumbnail) {
+          sessionStorage.setItem(
+            "pureat_analysis_thumbnail",
+            data.thumbnail
+          );
+        }
+
+        // Clean up the temporary photo
+        await deletePendingPhoto();
+
+        router.replace("/analysis?mode=photo");
+      } catch (err) {
+        if (interval) clearInterval(interval);
+        setError("网络错误，请重试");
+        console.error(err);
       }
-      router.replace("/analysis?mode=photo");
-    } catch (err) {
-      clearInterval(interval);
-      setError("网络错误，请重试");
-      console.error(err);
     }
-  };
+
+    analyze();
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [router]);
 
   return (
     <div className="flex min-h-full flex-col items-center justify-center px-6">
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        capture={source === "camera" ? "environment" : undefined}
-        className="hidden"
-        onChange={handleFileChange}
-      />
-
       {error ? (
         <div className="w-full max-w-sm text-center">
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-600 mx-auto">
@@ -106,10 +108,10 @@ export default function AnalyzingPage() {
           <p className="mb-6 text-zinc-600">{error}</p>
           <div className="flex gap-3">
             <button
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => router.replace("/")}
               className="flex-1 rounded-xl bg-emerald-500 py-3 font-semibold text-white"
             >
-              重试
+              返回首页
             </button>
             <button
               onClick={() => router.replace("/analysis?mode=search")}
@@ -154,23 +156,6 @@ export default function AnalyzingPage() {
               </div>
             ))}
           </div>
-
-          {showTrigger && (
-            <div className="mt-8 space-y-3">
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full rounded-xl bg-emerald-500 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-transform"
-              >
-                {source === "camera" ? "点击打开相机" : "点击从相册选择"}
-              </button>
-              <button
-                onClick={() => router.replace("/")}
-                className="w-full rounded-xl bg-zinc-100 py-3 font-medium text-zinc-700 active:bg-zinc-200 transition-colors"
-              >
-                返回首页
-              </button>
-            </div>
-          )}
         </div>
       )}
     </div>

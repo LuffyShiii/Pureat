@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Camera, Image, Search } from "lucide-react";
@@ -8,11 +8,14 @@ import {
   getDailySummary,
   getDeviceId,
   isOnboardingComplete,
+  savePendingPhoto,
 } from "@/lib/storage/indexeddb";
 import { formatPurineRange } from "@/lib/calc/purine";
 
 export default function HomePage() {
   const router = useRouter();
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
   const [summary, setSummary] = useState({ purine_min_mg: 0, purine_max_mg: 0 });
   const [deviceId, setDeviceId] = useState("");
   const [loading, setLoading] = useState(true);
@@ -39,11 +42,24 @@ export default function HomePage() {
   }, [router]);
 
   const handleCapture = () => {
-    router.push("/analyzing?source=camera");
+    cameraInputRef.current?.click();
   };
 
   const handleGallery = () => {
-    router.push("/analyzing?source=gallery");
+    galleryInputRef.current?.click();
+  };
+
+  const handleFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    source: "camera" | "gallery"
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    await savePendingPhoto(file, source);
+    // Reset input so the same file can be selected again later
+    e.target.value = "";
+    router.push("/analyzing?source=photo");
   };
 
   if (loading) {
@@ -96,6 +112,21 @@ export default function HomePage() {
         </div>
       </div>
 
+      <input
+        ref={cameraInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={(e) => handleFileChange(e, "camera")}
+      />
+      <input
+        ref={galleryInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => handleFileChange(e, "gallery")}
+      />
       <input type="hidden" value={deviceId} />
     </div>
   );

@@ -17,20 +17,32 @@ interface PureatDB extends DBSchema {
       created_at: string;
     };
   };
+  pending_photos: {
+    key: string;
+    value: {
+      id: string;
+      file: File;
+      source: "camera" | "gallery";
+      created_at: string;
+    };
+  };
 }
 
 const DB_NAME = "pureat";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export async function getDB() {
   return openDB<PureatDB>(DB_NAME, DB_VERSION, {
-    upgrade(db) {
+    upgrade(db, oldVersion) {
       if (!db.objectStoreNames.contains("food_logs")) {
         const logStore = db.createObjectStore("food_logs", { keyPath: "id" });
         logStore.createIndex("by_date", "date");
       }
       if (!db.objectStoreNames.contains("thumbnails")) {
         db.createObjectStore("thumbnails", { keyPath: "id" });
+      }
+      if (oldVersion < 2 && !db.objectStoreNames.contains("pending_photos")) {
+        db.createObjectStore("pending_photos", { keyPath: "id" });
       }
     },
   });
@@ -123,6 +135,39 @@ export async function getThumbnail(id: string): Promise<string | undefined> {
 export async function deleteThumbnail(id: string): Promise<void> {
   const db = await getDB();
   await db.delete("thumbnails", id);
+}
+
+const PENDING_PHOTO_ID = "pending";
+
+export async function savePendingPhoto(
+  file: File,
+  source: "camera" | "gallery"
+): Promise<void> {
+  const db = await getDB();
+  await db.put("pending_photos", {
+    id: PENDING_PHOTO_ID,
+    file,
+    source,
+    created_at: new Date().toISOString(),
+  });
+}
+
+export async function getPendingPhoto(): Promise<
+  | {
+      file: File;
+      source: "camera" | "gallery";
+    }
+  | undefined
+> {
+  const db = await getDB();
+  const item = await db.get("pending_photos", PENDING_PHOTO_ID);
+  if (!item) return undefined;
+  return { file: item.file, source: item.source };
+}
+
+export async function deletePendingPhoto(): Promise<void> {
+  const db = await getDB();
+  await db.delete("pending_photos", PENDING_PHOTO_ID);
 }
 
 export function getDeviceId(): string {
