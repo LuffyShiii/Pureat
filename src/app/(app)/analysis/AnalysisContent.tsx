@@ -286,14 +286,13 @@ export default function AnalysisPage() {
     setItems((prev) => {
       const next = [...prev];
       const item = next[index];
-      const center = (item.estimated_weight_g.min + item.estimated_weight_g.max) / 2;
-      const range = (item.estimated_weight_g.max - item.estimated_weight_g.min) / 2;
-      const newCenter = Math.max(10, Math.round(center + delta));
+      const newMin = Math.max(10, Math.round(item.estimated_weight_g.min + delta));
+      const newMax = Math.max(newMin, Math.round(item.estimated_weight_g.max + delta));
       next[index] = {
         ...item,
         estimated_weight_g: {
-          min: Math.max(10, Math.round(newCenter - range)),
-          max: Math.round(newCenter + range),
+          min: newMin,
+          max: newMax,
         },
       };
       return next;
