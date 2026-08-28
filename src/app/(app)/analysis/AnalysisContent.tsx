@@ -476,11 +476,13 @@ export default function AnalysisPage() {
                     {formatWeightRange(item.estimated_weight_g)} · {getPortionText(item.estimated_weight_g.max)}
                   </p>
                 </div>
-                <div
-                  className={`rounded-full px-3 py-1 text-sm font-medium ${style.bg} ${style.text}`}
-                >
-                  {style.label}
-                </div>
+                {item.level !== "unknown" && (
+                  <div
+                    className={`rounded-full px-3 py-1 text-sm font-medium ${style.bg} ${style.text}`}
+                  >
+                    {style.label}
+                  </div>
+                )}
               </div>
 
               <div className="mb-4">
