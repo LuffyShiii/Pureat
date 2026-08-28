@@ -38,6 +38,11 @@ const LEVEL_STYLES = {
     text: "text-red-700",
     label: "尽量避免",
   },
+  unknown: {
+    bg: "bg-zinc-100",
+    text: "text-zinc-600",
+    label: "无数据",
+  },
 };
 
 export default function AnalysisPage() {
@@ -116,7 +121,7 @@ export default function AnalysisPage() {
           canonical_name: item.canonical_name || item.name,
           state: item.state || "cooked",
           purine_range: { min: 0, max: 0 },
-          level: "red",
+          level: "unknown",
           recommendation: "暂时没有找到这个食物的可靠嘌呤数据，请手动选择食物。",
         });
         continue;
@@ -159,7 +164,14 @@ export default function AnalysisPage() {
     }
 
     setItems(analyzed);
-    setSelectedForLog(new Set(analyzed.map((_, i) => i)));
+    setSelectedForLog(
+      new Set(
+        analyzed
+          .map((item, i) => ({ item, i }))
+          .filter(({ item }) => item.food_id && item.level !== "unknown")
+          .map(({ i }) => i)
+      )
+    );
     setNeedsConfirmation(
       new Set(
         analyzed
@@ -520,14 +532,18 @@ export default function AnalysisPage() {
                   checked={selectedForLog.has(index)}
                   onChange={() => toggleSelection(index)}
                   id={`select-${index}`}
-                  disabled={requiresConfirmation}
+                  disabled={requiresConfirmation || item.level === "unknown"}
                   className="h-5 w-5 rounded border-zinc-300 text-emerald-500 focus:ring-emerald-500 disabled:opacity-40"
                 />
                 <label
                   htmlFor={`select-${index}`}
-                  className={`text-sm ${requiresConfirmation ? "text-zinc-400" : "text-zinc-600"}`}
+                  className={`text-sm ${requiresConfirmation || item.level === "unknown" ? "text-zinc-400" : "text-zinc-600"}`}
                 >
-                  {requiresConfirmation ? "需先确认才能记录" : "加入今日饮食"}
+                  {item.level === "unknown"
+                    ? "无数据，请手动选择食物"
+                    : requiresConfirmation
+                    ? "需先确认才能记录"
+                    : "加入今日饮食"}
                 </label>
               </div>
             </div>

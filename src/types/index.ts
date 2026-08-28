@@ -31,7 +31,7 @@ export interface AnalysisItem extends RecognizedItem {
   food_id: string;
   canonical_name: string;
   purine_range: PurineRange;
-  level: "green" | "yellow" | "red";
+  level: "green" | "yellow" | "red" | "unknown";
   recommendation: string;
   confirmed?: boolean;
 }
