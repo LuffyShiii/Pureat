@@ -19,20 +19,27 @@ export default function AnalyzingPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(0);
   const [error, setError] = useState("");
+  const [showTrigger, setShowTrigger] = useState(false);
 
   useEffect(() => {
     if (source === "camera" || source === "gallery") {
+      // Auto-trigger works on desktop, but mobile Safari often blocks
+      // programmatic file input clicks. Show a manual fallback after a delay.
       fileInputRef.current?.click();
+      const timer = setTimeout(() => setShowTrigger(true), 1200);
+      return () => clearTimeout(timer);
     }
   }, [source]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
-      router.replace("/");
+      // User cancelled or auto-trigger was blocked (common on mobile Safari).
+      // Stay on this page and let the manual trigger button take over.
       return;
     }
 
+    setShowTrigger(false);
     setError("");
     setStep(0);
 
@@ -147,6 +154,23 @@ export default function AnalyzingPage() {
               </div>
             ))}
           </div>
+
+          {showTrigger && (
+            <div className="mt-8 space-y-3">
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full rounded-xl bg-emerald-500 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-transform"
+              >
+                {source === "camera" ? "点击打开相机" : "点击从相册选择"}
+              </button>
+              <button
+                onClick={() => router.replace("/")}
+                className="w-full rounded-xl bg-zinc-100 py-3 font-medium text-zinc-700 active:bg-zinc-200 transition-colors"
+              >
+                返回首页
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
