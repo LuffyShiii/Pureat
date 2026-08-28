@@ -58,6 +58,9 @@ export default function AnalysisPage() {
     () => new Set()
   );
   const [logging, setLogging] = useState(false);
+  const [needsConfirmation, setNeedsConfirmation] = useState<Set<number>>(
+    () => new Set()
+  );
 
   useEffect(() => {
     async function init() {
@@ -157,6 +160,14 @@ export default function AnalysisPage() {
 
     setItems(analyzed);
     setSelectedForLog(new Set(analyzed.map((_, i) => i)));
+    setNeedsConfirmation(
+      new Set(
+        analyzed
+          .map((item, i) => ({ item, i }))
+          .filter(({ item }) => item.confidence_level === "low")
+          .map(({ i }) => i)
+      )
+    );
   }
 
   async function handleSearch(query: string) {
@@ -173,13 +184,39 @@ export default function AnalysisPage() {
     }
   }
 
+  function markConfirmed(index: number) {
+    setNeedsConfirmation((prev) => {
+      const next = new Set(prev);
+      next.delete(index);
+      return next;
+    });
+    setItems((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], confirmed: true };
+      return next;
+    });
+  }
+
+  function openFoodSearchForConfirmation(index: number) {
+    const query = items[index]?.canonical_name || items[index]?.name || "";
+    setEditingIndex(index);
+    setSearchQuery(query);
+    setShowSearch(true);
+    if (query) handleSearch(query);
+  }
+
   async function addSearchFood(food: FoodOption) {
+    const isReplacing = editingIndex !== null;
+    const originalWeight = isReplacing
+      ? items[editingIndex].estimated_weight_g
+      : { min: 100, max: 120 };
+
     const newItem: AnalysisItem = {
       name: food.canonical_name,
       canonical_name: food.canonical_name,
       food_id: food.food_id,
       state: food.state as AnalysisItem["state"],
-      estimated_weight_g: { min: 100, max: 120 },
+      estimated_weight_g: originalWeight,
       confidence_level: "high",
       purine_range: { min: 0, max: 0 },
       level: "green",
@@ -191,8 +228,8 @@ export default function AnalysisPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         food_id: food.food_id,
-        weight_min_g: 100,
-        weight_max_g: 120,
+        weight_min_g: originalWeight.min,
+        weight_max_g: originalWeight.max,
         daily_purine_min_mg: daily.purine_min_mg,
         daily_purine_max_mg: daily.purine_max_mg,
       }),
@@ -222,6 +259,10 @@ export default function AnalysisPage() {
       next.add(targetIndex);
       return next;
     });
+
+    if (isReplacing) {
+      markConfirmed(targetIndex);
+    }
 
     setShowSearch(false);
     setEditingIndex(null);
@@ -276,6 +317,7 @@ export default function AnalysisPage() {
     const today = new Date().toISOString().split("T")[0];
 
     for (const index of selectedForLog) {
+      if (needsConfirmation.has(index)) continue;
       const item = items[index];
       if (!item.food_id) continue;
 
@@ -385,8 +427,34 @@ export default function AnalysisPage() {
       <div className="space-y-4">
         {items.map((item, index) => {
           const style = LEVEL_STYLES[item.level];
+          const requiresConfirmation = needsConfirmation.has(index);
           return (
             <div key={index} className="rounded-2xl bg-white p-5 shadow-sm">
+              {requiresConfirmation && (
+                <div className="mb-4 rounded-xl bg-amber-50 p-3">
+                  <p className="text-sm font-medium text-amber-800">
+                    AI 对这道菜不太确定
+                  </p>
+                  <p className="mt-1 text-xs text-amber-700">
+                    请确认食物是否正确，或修改为您认为正确的食物。
+                  </p>
+                  <div className="mt-3 flex gap-2">
+                    <button
+                      onClick={() => markConfirmed(index)}
+                      className="flex-1 rounded-lg bg-emerald-500 py-2 text-sm font-medium text-white active:bg-emerald-600"
+                    >
+                      确认无误
+                    </button>
+                    <button
+                      onClick={() => openFoodSearchForConfirmation(index)}
+                      className="flex-1 rounded-lg bg-zinc-100 py-2 text-sm font-medium text-zinc-700 active:bg-zinc-200"
+                    >
+                      修改食物
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="mb-4 flex items-start justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-zinc-900">
@@ -452,10 +520,14 @@ export default function AnalysisPage() {
                   checked={selectedForLog.has(index)}
                   onChange={() => toggleSelection(index)}
                   id={`select-${index}`}
-                  className="h-5 w-5 rounded border-zinc-300 text-emerald-500 focus:ring-emerald-500"
+                  disabled={requiresConfirmation}
+                  className="h-5 w-5 rounded border-zinc-300 text-emerald-500 focus:ring-emerald-500 disabled:opacity-40"
                 />
-                <label htmlFor={`select-${index}`} className="text-sm text-zinc-600">
-                  加入今日饮食
+                <label
+                  htmlFor={`select-${index}`}
+                  className={`text-sm ${requiresConfirmation ? "text-zinc-400" : "text-zinc-600"}`}
+                >
+                  {requiresConfirmation ? "需先确认才能记录" : "加入今日饮食"}
                 </label>
               </div>
             </div>
@@ -500,10 +572,18 @@ export default function AnalysisPage() {
         >
           <button
             onClick={handleAddToLog}
-            disabled={logging || selectedForLog.size === 0}
+            disabled={
+              logging ||
+              selectedForLog.size === 0 ||
+              needsConfirmation.size > 0
+            }
             className="mx-auto flex h-14 w-full max-w-md items-center justify-center rounded-xl bg-emerald-500 font-semibold text-white shadow-lg shadow-emerald-500/25 disabled:opacity-50"
           >
-            {logging ? "记录中..." : `加入今日饮食 (${selectedForLog.size})`}
+            {logging
+              ? "记录中..."
+              : needsConfirmation.size > 0
+              ? `请先确认 ${needsConfirmation.size} 个不确定的食物`
+              : `加入今日饮食 (${selectedForLog.size})`}
           </button>
         </div>
       )}

@@ -33,6 +33,7 @@ export interface AnalysisItem extends RecognizedItem {
   purine_range: PurineRange;
   level: "green" | "yellow" | "red";
   recommendation: string;
+  confirmed?: boolean;
 }
 
 export interface FoodLog {
