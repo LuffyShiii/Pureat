@@ -904,5 +904,509 @@
     "alias": "杏仁",
     "language": "zh",
     "priority": 10
+  },
+  {
+    "food_id": "french_fries",
+    "alias": "薯条",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "french_fries",
+    "alias": "炸薯条",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "french_fries",
+    "alias": "french fries",
+    "language": "en",
+    "priority": 5
+  },
+  {
+    "food_id": "potato_chips",
+    "alias": "薯片",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "potato_chips",
+    "alias": "potato chips",
+    "language": "en",
+    "priority": 5
+  },
+  {
+    "food_id": "hamburger",
+    "alias": "汉堡",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "hamburger",
+    "alias": "汉堡包",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "hamburger",
+    "alias": "hamburger",
+    "language": "en",
+    "priority": 5
+  },
+  {
+    "food_id": "pizza",
+    "alias": "披萨",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "pizza",
+    "alias": "比萨",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "pizza",
+    "alias": "pizza",
+    "language": "en",
+    "priority": 5
+  },
+  {
+    "food_id": "sandwich",
+    "alias": "三明治",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "sandwich",
+    "alias": "sandwich",
+    "language": "en",
+    "priority": 5
+  },
+  {
+    "food_id": "chicken_nuggets",
+    "alias": "鸡块",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "chicken_nuggets",
+    "alias": "麦乐鸡",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "cake",
+    "alias": "蛋糕",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "cake",
+    "alias": "cake",
+    "language": "en",
+    "priority": 5
+  },
+  {
+    "food_id": "cookie",
+    "alias": "饼干",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "cookie",
+    "alias": "cookie",
+    "language": "en",
+    "priority": 5
+  },
+  {
+    "food_id": "chocolate",
+    "alias": "巧克力",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "chocolate",
+    "alias": "chocolate",
+    "language": "en",
+    "priority": 5
+  },
+  {
+    "food_id": "ice_cream",
+    "alias": "冰淇淋",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "ice_cream",
+    "alias": "雪糕",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "mapo_tofu",
+    "alias": "麻婆豆腐",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "kung_pao_chicken",
+    "alias": "宫保鸡丁",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "tomato_egg",
+    "alias": "番茄炒蛋",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "tomato_egg",
+    "alias": "西红柿炒鸡蛋",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "pepper_pork",
+    "alias": "青椒肉丝",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "yuxiang_pork",
+    "alias": "鱼香肉丝",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "sweet_sour_pork",
+    "alias": "糖醋排骨",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "braised_pork_ribs",
+    "alias": "红烧排骨",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "sour_fish",
+    "alias": "酸菜鱼",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "boiled_fish",
+    "alias": "水煮鱼",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "malatang",
+    "alias": "麻辣烫",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "bbq",
+    "alias": "烧烤",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "bbq",
+    "alias": "烤串",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "stir_fried_noodles",
+    "alias": "炒面",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "rice_noodles",
+    "alias": "米粉",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "rice_noodles",
+    "alias": "米线",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "steamed_egg",
+    "alias": "蒸蛋",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "steamed_egg",
+    "alias": "鸡蛋羹",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "spring_roll",
+    "alias": "春卷",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "baozi_pork",
+    "alias": "肉包子",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "baozi_pork",
+    "alias": "肉包",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "baozi_vegetable",
+    "alias": "菜包子",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "baozi_vegetable",
+    "alias": "菜包",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "youtiao",
+    "alias": "油条",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "jianbing",
+    "alias": "煎饼",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "jianbing",
+    "alias": "煎饼果子",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "egg_pancake",
+    "alias": "鸡蛋灌饼",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "congee_preserved_egg",
+    "alias": "皮蛋瘦肉粥",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "soy_pudding",
+    "alias": "豆腐脑",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "pumpkin",
+    "alias": "南瓜",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "winter_melon",
+    "alias": "冬瓜",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "loofah",
+    "alias": "丝瓜",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "long_bean",
+    "alias": "豇豆",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "long_bean",
+    "alias": "长豆角",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "chives",
+    "alias": "韭菜",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "lotus_root",
+    "alias": "莲藕",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "lotus_root",
+    "alias": "藕",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "bamboo_shoots",
+    "alias": "竹笋",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "bamboo_shoots",
+    "alias": "笋",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "seaweed_kelp",
+    "alias": "海带",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "pear",
+    "alias": "梨",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "peach",
+    "alias": "桃",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "mango",
+    "alias": "芒果",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "pineapple",
+    "alias": "菠萝",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "pineapple",
+    "alias": "凤梨",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "blueberry",
+    "alias": "蓝莓",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "cherry",
+    "alias": "樱桃",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "pork_belly",
+    "alias": "五花肉",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "beef_steak",
+    "alias": "牛排",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "chicken_leg",
+    "alias": "鸡腿",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "duck_leg",
+    "alias": "鸭腿",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "hairtail",
+    "alias": "带鱼",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "yellow_croaker",
+    "alias": "黄鱼",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "yellow_croaker",
+    "alias": "黄花鱼",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "cuttlefish",
+    "alias": "墨鱼",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "cuttlefish",
+    "alias": "乌贼",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "fish_ball",
+    "alias": "鱼丸",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "milk_tea",
+    "alias": "奶茶",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "milk_tea",
+    "alias": "珍珠奶茶",
+    "language": "zh",
+    "priority": 9
+  },
+  {
+    "food_id": "cola",
+    "alias": "可乐",
+    "language": "zh",
+    "priority": 10
+  },
+  {
+    "food_id": "cola",
+    "alias": "可口可乐",
+    "language": "zh",
+    "priority": 9
   }
 ]
