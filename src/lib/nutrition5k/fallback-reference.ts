@@ -1,21 +1,14 @@
 /**
- * Fake Nutrition5k reference data for portion-size estimation.
+ * Fallback Nutrition5k-style reference data.
  *
- * These values are placeholders derived from typical Western portion sizes
- * and the Nutrition5k paper's reported mass ranges, not from the actual
- * dataset. They let us validate the RAG-style flow before processing the
- * full Nutrition5k corpus.
+ * These values are hand-curated typical Western portion sizes. They are kept as
+ * a safety net so the runtime can still provide weight anchors if the generated
+ * reference from the real Nutrition5k dataset is missing or invalid.
  */
 
-export interface WeightReference {
-  category: string;
-  small_g: number;
-  medium_g: number;
-  large_g: number;
-  samples: number[];
-}
+import { WeightReference } from "./reference";
 
-export const FAKE_NUTRITION5K_REFERENCES: Record<string, WeightReference> = {
+export const FALLBACK_NUTRITION5K_REFERENCES: Record<string, WeightReference> = {
   poultry: {
     category: "poultry",
     small_g: 120,
@@ -137,7 +130,7 @@ export const FAKE_NUTRITION5K_REFERENCES: Record<string, WeightReference> = {
   },
 };
 
-const FOOD_NAME_TO_CATEGORY: Record<string, string> = {
+export const FALLBACK_FOOD_NAME_TO_CATEGORY: Record<string, string> = {
   // poultry
   "chicken breast": "poultry",
   "chicken wing": "poultry",
@@ -146,133 +139,95 @@ const FOOD_NAME_TO_CATEGORY: Record<string, string> = {
   "duck": "poultry",
   "chicken nuggets": "poultry",
   // beef
-  steak: "beef",
-  beef: "beef",
+  "steak": "beef",
+  "beef": "beef",
   "roast beef": "beef",
   "beef patty": "beef",
-  hamburger: "beef",
+  "hamburger": "beef",
   "ground beef": "beef",
   // pork
   "pork chop": "pork",
-  pork: "pork",
-  bacon: "pork",
-  ham: "pork",
-  sausage: "pork",
+  "pork": "pork",
+  "bacon": "pork",
+  "ham": "pork",
+  "sausage": "pork",
   // fish
-  salmon: "fish",
+  "salmon": "fish",
   "cod fish": "fish",
-  cod: "fish",
-  tuna: "fish",
-  fish: "fish",
+  "cod": "fish",
+  "tuna": "fish",
+  "fish": "fish",
   // seafood
-  shrimp: "seafood",
-  prawn: "seafood",
-  scallop: "seafood",
-  crab: "seafood",
-  lobster: "seafood",
+  "shrimp": "seafood",
+  "prawn": "seafood",
+  "scallop": "seafood",
+  "crab": "seafood",
+  "lobster": "seafood",
   // rice
-  rice: "rice",
+  "rice": "rice",
   "fried rice": "rice",
   "white rice": "rice",
-  risotto: "rice",
+  "risotto": "rice",
   // pasta
-  pasta: "pasta",
-  spaghetti: "pasta",
-  noodles: "pasta",
+  "pasta": "pasta",
+  "spaghetti": "pasta",
+  "noodles": "pasta",
   "macaroni and cheese": "pasta",
   // potato
-  fries: "potato",
+  "fries": "potato",
   "french fries": "potato",
   "baked potato": "potato",
   "mashed potato": "potato",
-  potato: "potato",
+  "potato": "potato",
   // bread
-  bread: "bread",
-  toast: "bread",
-  bun: "bread",
-  bagel: "bread",
-  croissant: "bread",
+  "bread": "bread",
+  "toast": "bread",
+  "bun": "bread",
+  "bagel": "bread",
+  "croissant": "bread",
   // salad
-  salad: "salad",
+  "salad": "salad",
   "green salad": "salad",
   "caesar salad": "salad",
   // vegetable
-  broccoli: "vegetable",
-  carrot: "vegetable",
+  "broccoli": "vegetable",
+  "carrot": "vegetable",
   "green beans": "vegetable",
-  vegetable: "vegetable",
-  spinach: "vegetable",
-  mushroom: "vegetable",
+  "vegetable": "vegetable",
+  "spinach": "vegetable",
+  "mushroom": "vegetable",
   // fruit
-  apple: "fruit",
-  banana: "fruit",
-  berry: "fruit",
-  strawberry: "fruit",
-  fruit: "fruit",
+  "apple": "fruit",
+  "banana": "fruit",
+  "berry": "fruit",
+  "strawberry": "fruit",
+  "fruit": "fruit",
   // dessert
-  cake: "dessert",
+  "cake": "dessert",
   "ice cream": "dessert",
-  cookie: "dessert",
-  chocolate: "dessert",
-  dessert: "dessert",
+  "cookie": "dessert",
+  "chocolate": "dessert",
+  "dessert": "dessert",
   // beverage
-  soda: "beverage",
+  "soda": "beverage",
   "soft drink": "beverage",
-  juice: "beverage",
-  milk: "beverage",
-  coffee: "beverage",
-  tea: "beverage",
-  drink: "beverage",
+  "juice": "beverage",
+  "milk": "beverage",
+  "coffee": "beverage",
+  "tea": "beverage",
+  "drink": "beverage",
   // egg
-  egg: "egg",
-  omelette: "egg",
+  "egg": "egg",
+  "omelette": "egg",
   // soup
-  soup: "soup",
-  stew: "soup",
-  curry: "soup",
+  "soup": "soup",
+  "stew": "soup",
+  "curry": "soup",
   // mixed_dish
-  pizza: "mixed_dish",
-  burger: "mixed_dish",
-  sandwich: "mixed_dish",
-  taco: "mixed_dish",
-  burrito: "mixed_dish",
-  hotdog: "mixed_dish",
+  "pizza": "mixed_dish",
+  "burger": "mixed_dish",
+  "sandwich": "mixed_dish",
+  "taco": "mixed_dish",
+  "burrito": "mixed_dish",
+  "hotdog": "mixed_dish",
 };
-
-export function getCategoryByFoodName(name: string): string | undefined {
-  const lower = name.toLowerCase();
-
-  // Exact match
-  if (FOOD_NAME_TO_CATEGORY[lower]) {
-    return FOOD_NAME_TO_CATEGORY[lower];
-  }
-
-  // Substring match: prefer longer keys first so "chicken breast" beats "chicken"
-  const sortedKeys = Object.keys(FOOD_NAME_TO_CATEGORY).sort(
-    (a, b) => b.length - a.length
-  );
-  for (const key of sortedKeys) {
-    if (lower.includes(key)) {
-      return FOOD_NAME_TO_CATEGORY[key];
-    }
-  }
-
-  return undefined;
-}
-
-export function getWeightReference(
-  category: string
-): WeightReference | undefined {
-  return FAKE_NUTRITION5K_REFERENCES[category];
-}
-
-export function formatReferenceForPrompt(ref: WeightReference): string {
-  return [
-    `Reference weights for similar ${ref.category} items from Nutrition5k:`,
-    `- Small portion: ~${ref.small_g}g`,
-    `- Medium portion: ~${ref.medium_g}g`,
-    `- Large portion: ~${ref.large_g}g`,
-    `- Real sample weights: ${ref.samples.join("g, ")}g`,
-    "Use these values as anchors when estimating the weight range. Output a reasonable range, not a precise single value.",
-  ].join("\n");
-}

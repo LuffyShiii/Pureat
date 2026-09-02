@@ -4,7 +4,7 @@ import {
   formatReferenceForPrompt,
   getCategoryByFoodName,
   getWeightReference,
-} from "@/lib/nutrition5k/fake-reference";
+} from "@/lib/nutrition5k/reference";
 
 export interface VisionAdapter {
   recognize(

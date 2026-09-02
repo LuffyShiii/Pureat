@@ -1,0 +1,228 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-09-02T10:16:39.674Z",
+  "source": "Nutrition5k dataset (dish_metadata_cafe1.csv + dish_metadata_cafe2.csv)",
+  "references": {
+    "poultry": {
+      "category": "poultry",
+      "small_g": 55,
+      "medium_g": 90,
+      "large_g": 130,
+      "samples": [
+        40,
+        55,
+        90,
+        120,
+        170
+      ]
+    },
+    "beef": {
+      "category": "beef",
+      "small_g": 50,
+      "medium_g": 60,
+      "large_g": 90,
+      "samples": [
+        35,
+        50,
+        60,
+        90,
+        120
+      ]
+    },
+    "pork": {
+      "category": "pork",
+      "small_g": 35,
+      "medium_g": 50,
+      "large_g": 90,
+      "samples": [
+        25,
+        40,
+        50,
+        85,
+        110
+      ]
+    },
+    "fish": {
+      "category": "fish",
+      "small_g": 60,
+      "medium_g": 80,
+      "large_g": 120,
+      "samples": [
+        40,
+        60,
+        80,
+        105,
+        165
+      ]
+    },
+    "seafood": {
+      "category": "seafood",
+      "small_g": 40,
+      "medium_g": 40,
+      "large_g": 50,
+      "samples": [
+        30,
+        40,
+        40,
+        50,
+        60
+      ]
+    },
+    "rice": {
+      "category": "rice",
+      "small_g": 30,
+      "medium_g": 45,
+      "large_g": 75,
+      "samples": [
+        25,
+        30,
+        45,
+        65,
+        95
+      ]
+    },
+    "pasta": {
+      "category": "pasta",
+      "small_g": 30,
+      "medium_g": 45,
+      "large_g": 55,
+      "samples": [
+        25,
+        35,
+        45,
+        50,
+        60
+      ]
+    },
+    "potato": {
+      "category": "potato",
+      "small_g": 50,
+      "medium_g": 65,
+      "large_g": 90,
+      "samples": [
+        30,
+        50,
+        65,
+        85,
+        110
+      ]
+    },
+    "bread": {
+      "category": "bread",
+      "small_g": 30,
+      "medium_g": 45,
+      "large_g": 60,
+      "samples": [
+        25,
+        30,
+        45,
+        60,
+        75
+      ]
+    },
+    "salad": {
+      "category": "salad",
+      "small_g": 30,
+      "medium_g": 50,
+      "large_g": 75,
+      "samples": [
+        25,
+        35,
+        50,
+        70,
+        115
+      ]
+    },
+    "vegetable": {
+      "category": "vegetable",
+      "small_g": 35,
+      "medium_g": 55,
+      "large_g": 75,
+      "samples": [
+        25,
+        40,
+        55,
+        70,
+        95
+      ]
+    },
+    "fruit": {
+      "category": "fruit",
+      "small_g": 55,
+      "medium_g": 70,
+      "large_g": 95,
+      "samples": [
+        35,
+        55,
+        70,
+        90,
+        130
+      ]
+    },
+    "dessert": {
+      "category": "dessert",
+      "small_g": 30,
+      "medium_g": 50,
+      "large_g": 50,
+      "samples": [
+        25,
+        35,
+        50,
+        50,
+        50
+      ]
+    },
+    "beverage": {
+      "category": "beverage",
+      "small_g": 240,
+      "medium_g": 350,
+      "large_g": 500,
+      "samples": [
+        240,
+        300,
+        350,
+        420,
+        500
+      ]
+    },
+    "egg": {
+      "category": "egg",
+      "small_g": 85,
+      "medium_g": 115,
+      "large_g": 145,
+      "samples": [
+        65,
+        85,
+        115,
+        135,
+        215
+      ]
+    },
+    "soup": {
+      "category": "soup",
+      "small_g": 200,
+      "medium_g": 350,
+      "large_g": 500,
+      "samples": [
+        200,
+        280,
+        350,
+        420,
+        500
+      ]
+    },
+    "mixed_dish": {
+      "category": "mixed_dish",
+      "small_g": 40,
+      "medium_g": 55,
+      "large_g": 90,
+      "samples": [
+        35,
+        45,
+        55,
+        85,
+        120
+      ]
+    }
+  }
+}

@@ -42,3 +42,6 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# Nutrition5k raw metadata downloads
+/scripts/nutrition5k/downloads

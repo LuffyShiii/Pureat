@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Deployment artifacts
+    ".vercel/**",
+    // CommonJS utility scripts
+    "scripts/generate-icons.js",
   ]),
 ]);
 
