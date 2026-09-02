@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 import { prisma } from "@/lib/db/prisma";
-import { visionAdapter } from "@/lib/ai/vision";
+import { buildItemReferences, visionAdapter } from "@/lib/ai/vision";
 import { normalizeFoodName } from "@/lib/food/normalizer";
 import type { RecognizedItem } from "@/types";
 import { Prisma } from "@/generated/prisma/client";
@@ -103,13 +103,29 @@ export async function POST(request: NextRequest) {
     ]);
     const base64 = compressed.toString("base64");
 
-    const { items: recognizedItems, error } = await visionAdapter.recognize(
-      base64,
-      "image/jpeg"
-    );
+    // Step 1: initial recognition to get food names and rough weights
+    const {
+      items: initialRecognizedItems,
+      error: initialError,
+    } = await visionAdapter.recognize(base64, "image/jpeg");
 
-    if (error) {
-      return NextResponse.json({ error, items: [] });
+    if (initialError) {
+      return NextResponse.json({ error: initialError, items: [] });
+    }
+
+    // Step 2: refine weights using Nutrition5k-style references
+    const references = buildItemReferences(initialRecognizedItems);
+    let recognizedItems = initialRecognizedItems;
+
+    if (references.length > 0) {
+      const { items: refinedItems, error: refinedError } =
+        await visionAdapter.recognize(base64, "image/jpeg", {
+          references,
+        });
+
+      if (!refinedError && refinedItems.length > 0) {
+        recognizedItems = refinedItems;
+      }
     }
 
     // Normalize each recognized item

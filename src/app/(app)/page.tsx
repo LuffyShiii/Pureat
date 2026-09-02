@@ -110,6 +110,16 @@ export default function HomePage() {
             <span>手动搜索</span>
           </Link>
         </div>
+
+        <div className="w-full max-w-sm rounded-xl bg-emerald-50 p-4 text-sm text-emerald-800">
+          <p className="mb-2 font-semibold">📸 拍摄小贴士</p>
+          <ul className="list-disc space-y-1 pl-4 text-emerald-700">
+            <li>让食物占据画面中央 60-80%</li>
+            <li>从正上方或 45° 角拍摄</li>
+            <li>避免手、餐具遮挡主要食物</li>
+            <li>光线充足，减少阴影</li>
+          </ul>
+        </div>
       </div>
 
       <input

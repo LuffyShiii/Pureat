@@ -1,8 +1,20 @@
 import OpenAI from "openai";
 import type { RecognizedItem } from "@/types";
+import {
+  formatReferenceForPrompt,
+  getCategoryByFoodName,
+  getWeightReference,
+} from "@/lib/nutrition5k/fake-reference";
 
 export interface VisionAdapter {
-  recognize(imageBase64: string, mimeType: string): Promise<{
+  recognize(
+    imageBase64: string,
+    mimeType: string,
+    options?: {
+      references?: string[];
+      targetItem?: string;
+    }
+  ): Promise<{
     items: RecognizedItem[];
     error?: string;
   }>;
@@ -16,10 +28,11 @@ function getOpenAIClient(): OpenAI {
   return new OpenAI({ apiKey });
 }
 
-const SYSTEM_PROMPT = `你是一名食物识别助手。用户上传了一张食物照片。请判断照片中是否有食物，并识别出主要食物。
+function buildSystemPrompt(references?: string[]): string {
+  let prompt = `你是一名食物识别助手。用户上传了一张食物照片。请判断照片中是否有食物，并识别出主要食物。
 
 对每种食物输出：
-- name: 食物名称（尽量用日常中文，如"红烧牛肉"）
+- name: 食物名称（尽量用日常中文或英文，如"grilled chicken breast"）
 - state: 推断状态 raw/cooked/dried/processed，不确定则为 cooked
 - estimated_weight_g: { min, max }，基于视觉估算的合理重量范围（克）。照片无法精确称重，给出一个合理范围即可，不要给精确单值。
 - confidence_level: high / medium / low
@@ -31,6 +44,15 @@ const SYSTEM_PROMPT = `你是一名食物识别助手。用户上传了一张食
 - 如果照片过于模糊，返回空 items 并设置 error_code 为 "blurry"。
 - 如果不确定是什么食物，返回 confidence_level 为 low。
 - 如果一盘中有多个独立食物，请分别列出每种食物。`;
+
+  if (references && references.length > 0) {
+    prompt += `\n\n在估算重量时，请参考以下 Nutrition5k 数据集中同类食物的实际重量数据作为锚点：\n\n${references.join(
+      "\n\n"
+    )}\n\n请结合图片和上述参考数据，给出一个合理的重量范围。优先输出范围，不要输出精确单值。`;
+  }
+
+  return prompt;
+}
 
 const schema = {
   type: "object",
@@ -75,13 +97,14 @@ const schema = {
 export class OpenAIVisionAdapter implements VisionAdapter {
   async recognize(
     imageBase64: string,
-    mimeType: string
+    mimeType: string,
+    options: { references?: string[]; targetItem?: string } = {}
   ): Promise<{ items: RecognizedItem[]; error?: string }> {
     const openai = getOpenAIClient();
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: buildSystemPrompt(options.references) },
         {
           role: "user",
           content: [
@@ -124,7 +147,21 @@ export class OpenAIVisionAdapter implements VisionAdapter {
       return { items: [], error: "照片有点模糊，我暂时无法可靠判断食物。" };
     }
 
-    return { items: parsed.items || [] };
+    let items = parsed.items || [];
+
+    // If we are refining a specific item, only return that item
+    if (options.targetItem) {
+      const target = items.find(
+        (item) =>
+          item.name.toLowerCase().includes(options.targetItem!.toLowerCase()) ||
+          options.targetItem!.toLowerCase().includes(item.name.toLowerCase())
+      );
+      if (target) {
+        items = [target];
+      }
+    }
+
+    return { items };
   }
 }
 
@@ -153,3 +190,28 @@ export const visionAdapter: VisionAdapter =
   process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY.startsWith("sk-")
     ? new OpenAIVisionAdapter()
     : new MockVisionAdapter();
+
+/**
+ * Build reference prompts for a list of recognized items.
+ * Each item gets its own Nutrition5k reference text (if we have one).
+ */
+export function buildItemReferences(items: RecognizedItem[]): string[] {
+  const refs: string[] = [];
+  const seen = new Set<string>();
+
+  for (const item of items) {
+    const category = getCategoryByFoodName(item.name);
+    if (!category) continue;
+
+    const ref = getWeightReference(category);
+    if (!ref) continue;
+
+    const key = `${category}:${item.name}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+
+    refs.push(`For "${item.name}" (${category}):\n${formatReferenceForPrompt(ref)}`);
+  }
+
+  return refs;
+}
